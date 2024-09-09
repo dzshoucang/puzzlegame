@@ -12,7 +12,6 @@ public class GameJFrame extends JFrame {
         //初始化菜单
         initJMenuBar();
 
-
         //让界面显示出来
         this.setVisible(true);
     }
