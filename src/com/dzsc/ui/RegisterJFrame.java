@@ -5,9 +5,9 @@ import javax.swing.*;
 public class RegisterJFrame extends JFrame {
     //注册界面
 
-    public RegisterJFrame(){
+    public RegisterJFrame() {
         //设置界面的宽高
-        this.setSize(488,500);
+        this.setSize(488, 500);
 
         //设置界面置顶
         this.setAlwaysOnTop(true);

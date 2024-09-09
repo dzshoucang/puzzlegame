@@ -11,7 +11,7 @@ public class GameJFrame extends JFrame {
     //加载图片的时候会根据二维数组中的数据进行加载
     int[][] data = new int[4][4];
 
-    public GameJFrame(){
+    public GameJFrame() {
         //初始化界面
         initJFrame();
 
@@ -53,22 +53,21 @@ public class GameJFrame extends JFrame {
         // 外循环 -----把内循环重复执行四次。
         for (int i = 0; i < 4; i++) {
             //内循环 在一行添加四个图片
-            for (int j = 0; j  < 4; j ++) {
+            for (int j = 0; j < 4; j++) {
                 //获取当前要加载的图片序号
                 int number = data[i][j];
                 //创建一个图片ImageIcon的对象
-                ImageIcon icon = new ImageIcon("D:\\JavaProject\\projec\\puzzlegame\\image\\animal\\animal3\\"+ number +".jpg");
+                ImageIcon icon = new ImageIcon("D:\\JavaProject\\projec\\puzzlegame\\image\\animal\\animal3\\" + number + ".jpg");
                 //创建一个JLabel的对象（管理容器）
                 JLabel jLabel = new JLabel(icon);
                 //指定图片位置
-                jLabel.setBounds(105*j,105*i,105,105);
+                jLabel.setBounds(105 * j, 105 * i, 105, 105);
                 //把管理容器添加到界面中
 
                 this.getContentPane().add(jLabel);
 
             }
         }
-
 
 
     }
@@ -103,7 +102,7 @@ public class GameJFrame extends JFrame {
 
     private void initJFrame() {
         //设置界面的宽高
-        this.setSize(603,608);
+        this.setSize(603, 608);
         //设置界面的标题
         this.setTitle("拼图单机版 v1.0");
         //设置界面置顶
