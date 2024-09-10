@@ -1,15 +1,32 @@
 package com.dzsc.ui;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class GameJFrame extends JFrame {
+public class GameJFrame extends JFrame implements KeyListener {
     // GameJFrame 表示游戏主界面
 
     //创建一个二维数组
     //目的：用来管理数据
     //加载图片的时候会根据二维数组中的数据进行加载
     int[][] data = new int[4][4];
+    //记录空白方块在二维数组中的位置
+    int x = 0;
+    int y = 0;
+
+    //定义变量名记录当前图片路径
+    String path = "puzzlegame\\image\\animal\\animal3\\";
+
+    //定义二维数组，存储中缺德数据
+    int[][] win = {
+        {1,2,3,4},
+        {5,6,7,8},
+        {9,10,11,12},
+        {13,14,15,0}
+    };
 
     public GameJFrame() {
         //初始化界面
@@ -42,7 +59,13 @@ public class GameJFrame extends JFrame {
         }
         //按四个一组放进二维数组
         for (int i = 0; i < tempArr.length; i++) {
-            data[i / 4][i % 4] = tempArr[i];
+            if (tempArr[i] == 0) {
+                x = i / 4;
+                y = i % 4;
+            } else {
+                data[i / 4][i % 4] = tempArr[i];
+            }
+
         }
 
     }
@@ -50,6 +73,15 @@ public class GameJFrame extends JFrame {
     // 初始化图片
     //添加图片时按照二维数组添加
     private void initImage() {
+        //清空已有图片
+        this.getContentPane().removeAll();
+
+        if(victory()){
+            JLabel winJLabel = new JLabel(new ImageIcon("puzzlegame\\image\\win.png"));
+            winJLabel.setBounds(203,283,197,73);
+            this.getContentPane().add(winJLabel);
+        }
+
         // 外循环 -----把内循环重复执行四次。
         for (int i = 0; i < 4; i++) {
             //内循环 在一行添加四个图片
@@ -57,17 +89,30 @@ public class GameJFrame extends JFrame {
                 //获取当前要加载的图片序号
                 int number = data[i][j];
                 //创建一个图片ImageIcon的对象
-                ImageIcon icon = new ImageIcon("D:\\JavaProject\\projec\\puzzlegame\\image\\animal\\animal3\\" + number + ".jpg");
+                ImageIcon icon = new ImageIcon(path + number + ".jpg");
                 //创建一个JLabel的对象（管理容器）
                 JLabel jLabel = new JLabel(icon);
                 //指定图片位置
-                jLabel.setBounds(105 * j, 105 * i, 105, 105);
+                jLabel.setBounds(105 * j + 84, 105 * i + 134, 105, 105);
+                //给图片添加边框  0 凸起 1凹下去
+                jLabel.setBorder(new BevelBorder(1));
                 //把管理容器添加到界面中
 
                 this.getContentPane().add(jLabel);
 
+                //刷新界面
+                this.getContentPane().repaint();
+
             }
         }
+
+        //添加背景图片
+        ImageIcon bg = new ImageIcon("puzzlegame\\image\\background.png");
+        JLabel background = new JLabel(bg);
+        //设置背景图片位置
+        background.setBounds(40, 40, 508, 560);
+        //把背景图片添加进界面
+        this.getContentPane().add(background);
 
 
     }
@@ -102,7 +147,7 @@ public class GameJFrame extends JFrame {
 
     private void initJFrame() {
         //设置界面的宽高
-        this.setSize(603, 608);
+        this.setSize(603, 688);
         //设置界面的标题
         this.setTitle("拼图单机版 v1.0");
         //设置界面置顶
@@ -111,8 +156,134 @@ public class GameJFrame extends JFrame {
         this.setLocationRelativeTo(null);
         //设置默认关闭方式
         this.setDefaultCloseOperation(3);
-
         //取消默认的居中放置
-        setLayout(null);
+        this.setLayout(null);
+        //给整个界面添加键盘监听事件
+        this.addKeyListener(this);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    //按下不松时调用
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+        if(code == 65){
+            this.getContentPane().removeAll();
+            //加载完整的图片
+            JLabel all = new JLabel(new ImageIcon(path+"all.jpg"));
+            all.setBounds(83,134,420,420);
+            this.getContentPane().add(all);
+
+            //添加背景图片
+            ImageIcon bg = new ImageIcon("puzzlegame\\image\\background.png");
+            JLabel background = new JLabel(bg);
+            //设置背景图片位置
+            background.setBounds(40, 40, 508, 560);
+            //把背景图片添加进界面
+            this.getContentPane().add(background);
+
+            //刷新界面
+            this.getContentPane().repaint();
+        }
+    }
+    //松开按键会调用方法
+    @Override
+    public void keyReleased(KeyEvent e) {
+        //判断游戏是否胜利，胜利则直接结束无法继续移动
+        if(victory()){
+            return;
+        }
+
+        //对上下左右进行判断
+        //左上右下对应的分别是37 38 39 40
+        int code = e.getKeyCode();
+        if (code == 37) {
+            System.out.println("向左移动");
+            if(y == 3){
+                //表示空白方块已经在最右方了，他的右面没有图片可移动
+                return;
+            }
+            //逻辑：把空白方块向右移动
+            //x,y表示空白方块
+            //x,y表示空白方块
+            data[x][y]=data[x][y+1];
+            data[x][y+1]=0;
+            y++;
+            //按照最新的图片加载图片
+            initImage();
+
+        } else if (code == 38) {
+            System.out.println("向上移动");
+            if(x == 3){
+                //表示空白方块已经在最下方了，他的下面没有图片可移动
+                return;
+            }
+            //逻辑：把空白方块向下移动
+            //x,y表示空白方块
+            //x+1,y表示空白方块
+            data[x][y]=data[x+1][y];
+            data[x+1][y]=0;
+            x++;
+            //按照最新的图片加载图片
+            initImage();
+
+        } else if (code == 39) {
+            System.out.println("向右移动");
+            if(y == 0){
+                //表示空白方块已经在最左方了，他的左面没有图片可移动
+                return;
+            }
+            //逻辑：把空白方块向左移动
+            //x,y表示空白方块
+            //x,y-1表示空白方块
+            data[x][y]=data[x][y-1];
+            data[x][y-1]=0;
+            y--;
+            //按照最新的图片加载图片
+            initImage();
+
+        } else if (code == 40) {
+            System.out.println("向下移动");
+            if(x == 0){
+                //表示空白方块已经在最上方了，他的上面没有图片可移动
+                return;
+            }
+            //逻辑：把空白方块向上移动
+            //x,y表示空白方块
+            //x-1,y表示空白方块
+            data[x][y]=data[x-1][y];
+            data[x-1][y]=0;
+            x--;
+            //按照最新的图片加载图片
+            initImage();
+
+        } else if (code == 65) {
+            initImage();
+        } else if (code == 87) {
+            data = new int[][]{
+                    {1,2,3,4},
+                    {5,6,7,8},
+                    {9,10,11,12},
+                    {13,14,15,0}
+            };
+            initImage();
+        }
+    }
+
+    //判断data数组中的数据跟win中是否相同
+    public boolean victory(){
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                if(data[i][j] != win[i][j]){
+                    //如果有一个不一样，返回false
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
