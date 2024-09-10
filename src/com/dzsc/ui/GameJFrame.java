@@ -38,6 +38,11 @@ public class GameJFrame extends JFrame implements KeyListener , ActionListener {
     JMenuItem reLoginItem = new JMenuItem("重新登录");
     JMenuItem closeItem = new JMenuItem("关闭游戏");
 
+    //创建更换图片下的条目
+    JMenuItem girlItem = new JMenuItem("美女");
+    JMenuItem animalItem = new JMenuItem("动物");
+    JMenuItem sportItem = new JMenuItem("运动");
+
     JMenuItem accountItem = new JMenuItem("公众号");
 
     public GameJFrame() {
@@ -138,16 +143,24 @@ public class GameJFrame extends JFrame implements KeyListener , ActionListener {
         //创建菜单上的两个选项
         JMenu functionJMenu = new JMenu("功能");
         JMenu aboutJMenu = new JMenu("关于我们");
-
+        JMenu changeFigJMenu = new JMenu("更换图片");
 
         //把条目添加进选项中
+        functionJMenu.add(changeFigJMenu);
         functionJMenu.add(replayItem);
         functionJMenu.add(reLoginItem);
         functionJMenu.add(closeItem);
 
+        changeFigJMenu.add(girlItem);
+        changeFigJMenu.add(animalItem);
+        changeFigJMenu.add(sportItem);
+
         aboutJMenu.add(accountItem);
 
         //给条目绑定事件
+        girlItem.addActionListener(this);
+        animalItem.addActionListener(this);
+        sportItem.addActionListener(this);
         replayItem.addActionListener(this);
         reLoginItem.addActionListener(this);
         closeItem.addActionListener(this);
@@ -357,6 +370,39 @@ public class GameJFrame extends JFrame implements KeyListener , ActionListener {
 
             //让弹窗显示出来
             jDialog.setVisible(true);
+        } else if (obj == girlItem) {
+            System.out.println("更换图片-美女");
+            Random r = new Random();
+            int randomIndex = r.nextInt(13)+1;
+            path = "puzzlegame\\image\\girl\\girl"+randomIndex+"\\";
+            //打乱数据
+            initData();
+            //计数器清零
+            step = 0;
+            //重新加载图片
+            initImage();
+        } else if (obj == animalItem) {
+            System.out.println("更换图片-动物");
+            Random r = new Random();
+            int randomIndex = r.nextInt(8)+1;
+            path = "puzzlegame\\image\\animal\\animal"+randomIndex+"\\";
+            //打乱数据
+            initData();
+            //计数器清零
+            step = 0;
+            //重新加载图片
+            initImage();
+        }else if (obj == sportItem) {
+            System.out.println("更换图片-运动");
+            Random r = new Random();
+            int randomIndex = r.nextInt(10)+1;
+            path = "puzzlegame\\image\\sport\\sport"+randomIndex+"\\";
+            //打乱数据
+            initData();
+            //计数器清零
+            step = 0;
+            //重新加载图片
+            initImage();
         }
     }
 }
